@@ -4,7 +4,7 @@ describe("container", () => {
   test("resole one", () => {
     const container = new Container();
 
-    container.add("component1", () => ({ name: "1" }));
+    container.set("component1", () => ({ name: "1" }));
 
     expect(container.get("component1")).toEqual({ name: "1" });
   });
@@ -12,8 +12,8 @@ describe("container", () => {
   test("resole two", () => {
     const container = new Container();
 
-    container.add("component1", () => ({ name: "1" }));
-    container.add("component2", (context) => ({
+    container.set("component1", () => ({ name: "1" }));
+    container.set("component2", (context) => ({
       name: "2",
       component1: context.get("component1"),
     }));
@@ -28,12 +28,12 @@ describe("container", () => {
   test("resole three", () => {
     const container = new Container();
 
-    container.add("component1", () => ({ name: "1" }));
-    container.add("component2", (context) => ({
+    container.set("component1", () => ({ name: "1" }));
+    container.set("component2", (context) => ({
       name: "2",
       component1: context.get("component1"),
     }));
-    container.add("component3", (context) => ({
+    container.set("component3", (context) => ({
       name: "3",
       component1: context.get("component1"),
     }));

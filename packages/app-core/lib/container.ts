@@ -13,7 +13,7 @@ export default class Container {
     Initializer
   >();
 
-  add(key: string, initializer: Initializer): Container {
+  set(key: string, initializer: Initializer): Container {
     this.componentInitializers.set(key, initializer);
     return this;
   }
