@@ -14,5 +14,9 @@
   },
   "author": "",
   "license": "ISC",
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "@types/koa": "^2.11.4",
+    "koa": "^2.13.0"
+  }
 }
