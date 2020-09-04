@@ -1,3 +1,5 @@
+import CantFindComponentException from "./exception/cant-find-component-exception";
+
 type Initializer = (container: Container) => unknown;
 
 export default class Container {
@@ -16,12 +18,13 @@ export default class Container {
     return this;
   }
 
-  get(key: string): unknown | null {
+  get(key: string): unknown {
     let component = this.components.get(key);
     if (component != null) return component;
 
     component = this.componentInitializers.get(key)?.(this);
     if (component != null) this.components.set(key, component);
+    else throw new CantFindComponentException("Can't find component.");
 
     return component;
   }
