@@ -1,5 +1,5 @@
 {
-  "name": "app-core",
+  "name": "app-koa",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -14,5 +14,12 @@
   },
   "author": "",
   "license": "ISC",
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "app-core": "^1.0.0",
+    "koa": "^2.13.0"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.11.4"
+  }
 }
