@@ -11,7 +11,7 @@ export default class Application {
   }
 
   install(module: Module): Application {
-    module.build(this.features);
+    module.configure(this.features);
     return this;
   }
 }
