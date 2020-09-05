@@ -21,14 +21,14 @@ export default class KoaLauncherModule<
     this.configurationModule = configurationModule;
   }
 
-  dependencies(features: Container) {
+  protected dependencies(features: Container): void {
     super.dependencies(features);
     this.koaModule.configure(features);
     this.configurationModule.configure(features);
   }
 
   // eslint-disable-next-line class-methods-use-this
-  install(features: Container): KoaLauncher {
+  protected install(features: Container): KoaLauncher {
     const koa = features.get<Koa>("koa");
     const configuration = features.get<KoaConfiguration>("configuration");
 

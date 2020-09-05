@@ -13,7 +13,7 @@ export default abstract class FeatureModule<Feature> implements Module {
     features.set(this.name, (container) => this.install(container));
   }
 
-  // eslint-disable-next-line class-methods-use-this
+  // eslint-disable-next-line class-methods-use-this,@typescript-eslint/no-unused-vars
   protected dependencies(features: Container): void {}
 
   protected abstract install(features: Container): Feature;
