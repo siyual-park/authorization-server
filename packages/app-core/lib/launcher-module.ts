@@ -4,7 +4,7 @@ import FeatureModule from "./feature-module";
 export default abstract class LauncherModule<
   T extends Launcher
 > extends FeatureModule<T> {
-  protected constructor(name: string = "launcher") {
+  protected constructor(name = "launcher") {
     super(name);
   }
 }

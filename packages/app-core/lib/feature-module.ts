@@ -14,7 +14,7 @@ export default abstract class FeatureModule<Feature> implements Module {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  dependencies(features: Container): void {}
+  protected dependencies(features: Container): void {}
 
-  abstract install(features: Container): Feature;
+  protected abstract install(features: Container): Feature;
 }

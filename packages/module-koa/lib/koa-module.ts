@@ -10,8 +10,9 @@ export default class KoaModule extends FeatureModule<Koa> {
     this.middlewareModule = middlewareModule;
   }
 
-  dependencies(container: Container): void {
-    this.middlewareModule.install(container);
+  dependencies(features: Container): void {
+    super.dependencies(features);
+    this.middlewareModule.configure(features);
   }
 
   // eslint-disable-next-line class-methods-use-this
