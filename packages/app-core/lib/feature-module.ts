@@ -1,5 +1,5 @@
 import Module from "./module";
-import { Container } from "./index";
+import Container from "./container";
 
 export default abstract class FeatureModule<Feature> implements Module {
   readonly name: string;

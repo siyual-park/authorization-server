@@ -1,5 +1,5 @@
 {
-  "name": "app-koa",
+  "name": "module-koa",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -16,10 +16,7 @@
   "license": "ISC",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "app-core": "^1.0.0",
+    "app-core": "file:../app-core",
     "koa": "^2.13.0"
-  },
-  "devDependencies": {
-    "@types/koa": "^2.11.4"
   }
 }
