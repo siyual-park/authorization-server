@@ -1,4 +1,4 @@
-import Koa from "packages/module-koa/lib/koa-module";
+import Koa from "koa";
 import { FeatureModule } from "app-core";
 
 export default class KoaModule extends FeatureModule<Koa> {
