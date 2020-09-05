@@ -1,5 +1,5 @@
 interface Launcher {
-  launch(): void;
+  launch(): void | Promise<void>;
 }
 
 export default Launcher;

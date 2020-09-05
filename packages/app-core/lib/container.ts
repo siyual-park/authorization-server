@@ -18,14 +18,14 @@ export default class Container {
     return this;
   }
 
-  get(key: string): unknown {
+  get<T = undefined>(key: string): T {
     let component = this.components.get(key);
-    if (component != null) return component;
+    if (component != null) return component as T;
 
     component = this.componentInitializers.get(key)?.(this);
     if (component != null) this.components.set(key, component);
     else throw new CantFindComponentException("Can't find component.");
 
-    return component;
+    return component as T;
   }
 }

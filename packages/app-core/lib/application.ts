@@ -5,9 +5,9 @@ import Launcher from "./launcher";
 export default class Application {
   private readonly features: Container = new Container();
 
-  run(): void {
+  run(): void | Promise<void> {
     const launcher = this.features.get("launcher") as Launcher;
-    launcher.launch();
+    return launcher.launch();
   }
 
   install(module: Module): Application {
