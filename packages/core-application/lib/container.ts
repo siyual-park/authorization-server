@@ -5,7 +5,7 @@ type Initializer = (container: Container) => unknown;
 export default class Container {
   private readonly components: Map<string, unknown> = new Map<
     string,
-    undefined
+    unknown
   >();
 
   private readonly componentInitializers: Map<string, Initializer> = new Map<
@@ -19,13 +19,18 @@ export default class Container {
   }
 
   get<T = undefined>(key: string): T {
-    let component = this.components.get(key);
-    if (component != null) return component as T;
+    if (!this.has(key)) {
+      throw new CantFindComponentException("Can't find component.");
+    }
 
-    component = this.componentInitializers.get(key)?.(this);
-    if (component != null) this.components.set(key, component);
-    else throw new CantFindComponentException("Can't find component.");
+    if (!this.components.has(key) && this.componentInitializers.has(key)) {
+      this.components.set(key, this.componentInitializers.get(key)?.(this));
+    }
 
-    return component as T;
+    return this.components.get(key) as T;
+  }
+
+  has(key: string): boolean {
+    return this.components.has(key) || this.componentInitializers.has(key);
   }
 }

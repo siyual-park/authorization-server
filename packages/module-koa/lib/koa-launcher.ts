@@ -1,6 +1,5 @@
-import util from "util";
 import Koa from "koa";
-import { Launcher } from "app-core";
+import { Launcher } from "core-application";
 import KoaConfiguration from "./koa-configuration";
 
 export default class KoaLauncher implements Launcher {
@@ -13,7 +12,11 @@ export default class KoaLauncher implements Launcher {
     this.configuration = configuration;
   }
 
-  async launch(): Promise<void> {
-    return util.promisify(this.koa.listen)(this.configuration.port);
+  launch(): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.koa.listen(this.configuration.port, () => {
+        resolve();
+      });
+    });
   }
 }

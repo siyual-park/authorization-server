@@ -3,15 +3,18 @@ import Module from "./module";
 import Launcher from "./launcher";
 
 export default class Application {
-  private readonly features: Container = new Container();
+  private readonly components: Container = new Container();
+
+  private readonly modules: Module[] = [];
 
   run(): void | Promise<void> {
-    const launcher = this.features.get("launcher") as Launcher;
+    const launcher = this.components.get<Launcher>("launcher");
     return launcher.launch();
   }
 
   install(module: Module): Application {
-    module.configure(this.features);
+    this.modules.push(module);
+    module.configure(this.components);
     return this;
   }
 }

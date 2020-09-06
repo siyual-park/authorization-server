@@ -1,9 +1,9 @@
 import Launcher from "./launcher";
-import FeatureModule from "./feature-module";
+import ComponentModule from "./component-module";
 
 export default abstract class LauncherModule<
   T extends Launcher
-> extends FeatureModule<T> {
+> extends ComponentModule<T> {
   protected constructor(name = "launcher") {
     super(name);
   }

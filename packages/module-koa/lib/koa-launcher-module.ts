@@ -1,5 +1,5 @@
 import Koa from "koa";
-import { Container, LauncherModule } from "app-core";
+import { Container, LauncherModule } from "core-application";
 import KoaLauncher from "./koa-launcher";
 import KoaConfiguration from "./koa-configuration";
 import KoaConfigurationModule from "./koa-configuration-module";
@@ -14,23 +14,26 @@ export default class KoaLauncherModule<
 
   constructor(
     koaModule: KoaModule,
-    configurationModule: KoaConfigurationModule<Configuration>
+    configurationModule: KoaConfigurationModule<Configuration>,
+    name = "koa-launcher"
   ) {
-    super("koa-launcher");
+    super(name);
     this.koaModule = koaModule;
     this.configurationModule = configurationModule;
   }
 
-  protected dependencies(features: Container): void {
-    super.dependencies(features);
-    this.koaModule.configure(features);
-    this.configurationModule.configure(features);
+  protected dependencies(components: Container): void {
+    super.dependencies(components);
+    this.koaModule.configure(components);
+    this.configurationModule.configure(components);
   }
 
   // eslint-disable-next-line class-methods-use-this
-  protected install(features: Container): KoaLauncher {
-    const koa = features.get<Koa>("koa");
-    const configuration = features.get<KoaConfiguration>("configuration");
+  protected install(components: Container): KoaLauncher {
+    const koa = components.get<Koa>(this.koaModule.name);
+    const configuration = components.get<KoaConfiguration>(
+      this.configurationModule.name
+    );
 
     return new KoaLauncher(koa, configuration);
   }

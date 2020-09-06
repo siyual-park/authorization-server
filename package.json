@@ -45,7 +45,8 @@
     "typescript": "^4.0.2"
   },
   "dependencies": {
-    "app-core": "file:packages/app-core",
-    "module-koa": "file:packages/module-koa"
+    "core-application": "file:packages/core-application",
+    "module-koa": "file:packages/module-koa",
+    "runner-server": "file:packages/runner-server"
   }
 }

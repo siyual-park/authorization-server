@@ -1,29 +1,31 @@
 import Koa from "koa";
-import { Container, FeatureModule } from "app-core";
+import { Container, ComponentModule } from "core-application";
 import KoaMiddlewareModule from "./koa-middleware-module";
 
-export default class KoaModule extends FeatureModule<Koa> {
+export default class KoaModule extends ComponentModule<Koa> {
   private readonly middlewareModule: KoaMiddlewareModule<unknown, unknown>;
 
-  constructor(middlewareModule: KoaMiddlewareModule<unknown, unknown>) {
-    super("koa");
+  constructor(
+    middlewareModule: KoaMiddlewareModule<unknown, unknown>,
+    name = "koa"
+  ) {
+    super(name);
     this.middlewareModule = middlewareModule;
   }
 
-  protected dependencies(features: Container): void {
-    super.dependencies(features);
-    this.middlewareModule.configure(features);
+  protected dependencies(components: Container): void {
+    super.dependencies(components);
+    this.middlewareModule.configure(components);
   }
 
   // eslint-disable-next-line class-methods-use-this
-  protected install(container: Container): Koa {
-    const middlewares = container.get<Koa.Middleware<unknown, unknown>[]>(
-      "koa-middlewares"
+  protected install(components: Container): Koa {
+    const pipeline = components.get<Koa.Middleware<unknown, unknown>[]>(
+      this.middlewareModule.name
     );
+
     const koa = new Koa();
-    middlewares.forEach((middleware: Koa.Middleware<unknown, unknown>) =>
-      koa.use(middleware)
-    );
+    pipeline.forEach((middleware) => koa.use(middleware));
     return koa;
   }
 }
