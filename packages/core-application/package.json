@@ -1,14 +1,18 @@
 {
-  "name": "template-default",
+  "name": "core-application",
+  "version": "1.0.0",
+  "description": "",
   "main": "dist/index.js",
-  "types" : "dist/index.d.ts",
   "scripts": {
+    "test": "jest",
     "build": "npm run clean && npm run compile",
     "clean": "rm -rf ./dist",
     "compile": "gulp",
-    "test": "jest",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "prepublishOnly": "cross-env NODE_ENV=production npm run build"
-  }
+  },
+  "author": "",
+  "license": "ISC",
+  "types": "dist/index.d.ts"
 }
