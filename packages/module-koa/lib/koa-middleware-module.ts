@@ -1,5 +1,5 @@
 import Koa from "koa";
-import { ComponentModule, Components } from "core-application";
+import { ComponentModule } from "core-application";
 
 export default class KoaMiddlewareModule<
   StateT,
@@ -19,7 +19,7 @@ export default class KoaMiddlewareModule<
     return this;
   }
 
-  protected install(components: Components): Koa.Middleware<StateT, CustomT>[] {
+  protected install(): Koa.Middleware<StateT, CustomT>[] {
     return this.pipeline;
   }
 }
