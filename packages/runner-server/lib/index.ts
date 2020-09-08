@@ -1,30 +1,24 @@
-import {
-  KoaModule,
-  KoaMiddlewareModule,
-  KoaConfigurationModule,
-  KoaLauncherModule,
-} from "module-koa";
+import { KoaModule } from "module-koa";
 import { Application } from "core-application";
 
-const koaMiddlewareModule = new KoaMiddlewareModule();
-koaMiddlewareModule.add(({ response }) => {
-  response.body = "hello world";
-});
+async function main() {
+  const koaModule: KoaModule = new KoaModule({
+    port: 3000,
+    keys: {
+      launcher: "launcher",
+    },
+  });
 
-const koaModule = new KoaModule(koaMiddlewareModule);
+  koaModule.use(({ response }) => {
+    response.body = "hello world";
+  });
 
-const koaConfigurationModule = new KoaConfigurationModule();
-koaConfigurationModule.set({
-  port: 3000,
-});
+  const application = new Application();
+  application.install(koaModule);
 
-const koaLauncherModule = new KoaLauncherModule(
-  koaModule,
-  koaConfigurationModule,
-  "launcher"
-);
+  await application.run();
 
-const application = new Application();
-application.install(koaLauncherModule);
+  console.log(`Server run in port ${koaModule.launcherModule.options.port}`);
+}
 
-application.run();
+main().then();

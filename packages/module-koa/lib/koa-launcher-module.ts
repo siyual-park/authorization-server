@@ -1,40 +1,25 @@
 import Koa from "koa";
-import { Container, LauncherModule } from "core-application";
+import { Components, Container, LauncherModule } from "core-application";
+import { ListenOptions } from "net";
 import KoaLauncher from "./koa-launcher";
-import KoaConfiguration from "./koa-configuration";
-import KoaConfigurationModule from "./koa-configuration-module";
-import KoaModule from "./koa-module";
 
-export default class KoaLauncherModule<
-  Configuration extends KoaConfiguration
-> extends LauncherModule<KoaLauncher> {
-  private readonly koaModule: KoaModule;
+export default class KoaLauncherModule extends LauncherModule<KoaLauncher> {
+  readonly applicationKey: string;
 
-  private readonly configurationModule: KoaConfigurationModule<Configuration>;
+  readonly options: ListenOptions;
 
   constructor(
-    koaModule: KoaModule,
-    configurationModule: KoaConfigurationModule<Configuration>,
-    name = "koa-launcher"
+    key = "koa-launcher",
+    applicationKey: string,
+    options: ListenOptions
   ) {
-    super(name);
-    this.koaModule = koaModule;
-    this.configurationModule = configurationModule;
+    super(key, [applicationKey]);
+    this.applicationKey = applicationKey;
+    this.options = options;
   }
 
-  protected dependencies(components: Container): void {
-    super.dependencies(components);
-    this.koaModule.configure(components);
-    this.configurationModule.configure(components);
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  protected install(components: Container): KoaLauncher {
-    const koa = components.get<Koa>(this.koaModule.name);
-    const configuration = components.get<KoaConfiguration>(
-      this.configurationModule.name
-    );
-
-    return new KoaLauncher(koa, configuration);
+  protected install(components: Components): KoaLauncher {
+    const application = components.get<Koa>(this.applicationKey);
+    return new KoaLauncher(application, this.options);
   }
 }

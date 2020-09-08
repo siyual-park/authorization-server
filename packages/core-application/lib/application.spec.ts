@@ -1,14 +1,14 @@
-import Container from "./container";
 import Application from "./application";
+import Components from "./components";
 
 describe("application", () => {
   test("resole one", () => {
     let received: string | null = null;
 
     const launcherModule = {
-      configure(features: Container): void {
-        features.set("launcher", (container) => {
-          const sendMessage = container.get("sendMessage") as (
+      configure(components: Components): void {
+        components.set("launcher", () => {
+          const sendMessage = components.get("sendMessage") as (
             message: string
           ) => void;
 
@@ -22,8 +22,8 @@ describe("application", () => {
     };
 
     const sendMessageModule = {
-      configure(features: Container): void {
-        features.set("sendMessage", () => {
+      configure(components: Components): void {
+        components.set("sendMessage", () => {
           return (message: string) => {
             received = message;
           };

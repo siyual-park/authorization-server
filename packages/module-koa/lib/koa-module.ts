@@ -1,31 +1,42 @@
-import Koa from "koa";
-import { Container, ComponentModule } from "core-application";
+import Koa, { DefaultContext, DefaultState } from "koa";
+import { Components, Module } from "core-application";
+import Options from "./options";
+import KoaApplicationModule from "./koa-application-module";
 import KoaMiddlewareModule from "./koa-middleware-module";
+import KoaLauncherModule from "./koa-launcher-module";
 
-export default class KoaModule extends ComponentModule<Koa> {
-  private readonly middlewareModule: KoaMiddlewareModule<unknown, unknown>;
+export default class KoaModule<StateT = DefaultState, CustomT = DefaultContext>
+  implements Module {
+  readonly launcherModule: KoaLauncherModule;
 
-  constructor(
-    middlewareModule: KoaMiddlewareModule<unknown, unknown>,
-    name = "koa"
-  ) {
-    super(name);
-    this.middlewareModule = middlewareModule;
-  }
+  readonly applicationModule: KoaApplicationModule;
 
-  protected dependencies(components: Container): void {
-    super.dependencies(components);
-    this.middlewareModule.configure(components);
-  }
+  readonly middlewareModule: KoaMiddlewareModule<StateT, CustomT>;
 
-  // eslint-disable-next-line class-methods-use-this
-  protected install(components: Container): Koa {
-    const pipeline = components.get<Koa.Middleware<unknown, unknown>[]>(
-      this.middlewareModule.name
+  constructor(options: Options) {
+    this.middlewareModule = new KoaMiddlewareModule<StateT, CustomT>(
+      options.keys?.middleware
     );
+    this.applicationModule = new KoaApplicationModule(
+      options.keys?.application,
+      this.middlewareModule.key
+    );
+    this.launcherModule = new KoaLauncherModule(
+      options.keys?.launcher,
+      this.applicationModule.key,
+      options
+    );
+  }
 
-    const koa = new Koa();
-    pipeline.forEach((middleware) => koa.use(middleware));
-    return koa;
+  use(middleware: Koa.Middleware<StateT, CustomT>): KoaModule<StateT, CustomT> {
+    this.middlewareModule.use(middleware);
+
+    return this;
+  }
+
+  configure(components: Components): void {
+    this.middlewareModule.configure(components);
+    this.applicationModule.configure(components);
+    this.launcherModule.configure(components);
   }
 }

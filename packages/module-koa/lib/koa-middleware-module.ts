@@ -1,5 +1,5 @@
 import Koa from "koa";
-import { ComponentModule } from "core-application";
+import { ComponentModule, Components } from "core-application";
 
 export default class KoaMiddlewareModule<
   StateT,
@@ -7,11 +7,11 @@ export default class KoaMiddlewareModule<
 > extends ComponentModule<Koa.Middleware<StateT, CustomT>[]> {
   private readonly pipeline: Koa.Middleware<StateT, CustomT>[] = [];
 
-  constructor(name = "koa-middlewares") {
-    super(name);
+  constructor(key = "koa-middleware") {
+    super(key);
   }
 
-  add(
+  use(
     middleware: Koa.Middleware<StateT, CustomT>
   ): KoaMiddlewareModule<StateT, CustomT> {
     this.pipeline.push(middleware);
@@ -19,7 +19,7 @@ export default class KoaMiddlewareModule<
     return this;
   }
 
-  protected install(): Koa.Middleware<StateT, CustomT>[] {
+  protected install(components: Components): Koa.Middleware<StateT, CustomT>[] {
     return this.pipeline;
   }
 }

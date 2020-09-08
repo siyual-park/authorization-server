@@ -1,36 +1,42 @@
 import CantFindComponentException from "./exception/cant-find-component-exception";
 
-type Initializer = (container: Container) => unknown;
+type Initializer<V> = () => V;
 
-export default class Container {
-  private readonly components: Map<string, unknown> = new Map<
-    string,
-    unknown
+export default class Container<K, V> {
+  private readonly elements: Map<K, V> = new Map<K, V>();
+
+  private readonly componentInitializers: Map<K, Initializer<V>> = new Map<
+    K,
+    Initializer<V>
   >();
 
-  private readonly componentInitializers: Map<string, Initializer> = new Map<
-    string,
-    Initializer
-  >();
-
-  set(key: string, initializer: Initializer): Container {
+  set(key: K, initializer: Initializer<V>): Container<K, V> {
     this.componentInitializers.set(key, initializer);
     return this;
   }
 
-  get<T = undefined>(key: string): T {
-    if (!this.has(key)) {
-      throw new CantFindComponentException("Can't find component.");
-    }
-
-    if (!this.components.has(key) && this.componentInitializers.has(key)) {
-      this.components.set(key, this.componentInitializers.get(key)?.(this));
-    }
-
-    return this.components.get(key) as T;
+  update(
+    key: K,
+    updater: (initializer?: Initializer<V>) => Initializer<V>
+  ): void {
+    this.componentInitializers.set(
+      key,
+      updater(this.componentInitializers.get(key))
+    );
   }
 
-  has(key: string): boolean {
-    return this.components.has(key) || this.componentInitializers.has(key);
+  get<U extends V>(key: K): U {
+    if (!this.elements.has(key)) {
+      if (!this.componentInitializers.has(key)) {
+        throw new CantFindComponentException(`Can't find ${key} component.`);
+      }
+      this.elements.set(key, this.componentInitializers.get(key)?.() as U);
+    }
+
+    return this.elements.get(key) as U;
+  }
+
+  has(key: K): boolean {
+    return this.elements.has(key) || this.componentInitializers.has(key);
   }
 }

@@ -13,9 +13,9 @@ describe("container", () => {
     const container = new Container();
 
     container.set("component1", () => ({ name: "1" }));
-    container.set("component2", (context) => ({
+    container.set("component2", () => ({
       name: "2",
-      component1: context.get("component1"),
+      component1: container.get("component1"),
     }));
 
     expect(container.get("component2")).toEqual({
@@ -29,13 +29,13 @@ describe("container", () => {
     const container = new Container();
 
     container.set("component1", () => ({ name: "1" }));
-    container.set("component2", (context) => ({
+    container.set("component2", () => ({
       name: "2",
-      component1: context.get("component1"),
+      component1: container.get("component1"),
     }));
-    container.set("component3", (context) => ({
+    container.set("component3", () => ({
       name: "3",
-      component1: context.get("component1"),
+      component1: container.get("component1"),
     }));
 
     expect(container.get("component3")).toEqual({

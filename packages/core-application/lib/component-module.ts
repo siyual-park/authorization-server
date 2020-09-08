@@ -1,20 +1,22 @@
 import Module from "./module";
-import Container from "./container";
+import Components from "./components";
 
-export default abstract class ComponentModule<Feature> implements Module {
-  readonly name: string;
+export default abstract class ComponentModule<Component> implements Module {
+  readonly key: string;
 
-  protected constructor(name: string) {
-    this.name = name;
+  readonly dependencies: string[];
+
+  protected constructor(key: string, dependencies: string[] = []) {
+    this.key = key;
+    this.dependencies = dependencies;
   }
 
-  configure(components: Container): void {
-    this.dependencies(components);
-    components.set(this.name, (container) => this.install(container));
+  configure(components: Components): void {
+    components.set(this.key, () => this.install(components));
+    this.dependencies.forEach((dependency) =>
+      components.setDependency(this.key, dependency)
+    );
   }
 
-  // eslint-disable-next-line class-methods-use-this,@typescript-eslint/no-unused-vars
-  protected dependencies(components: Container): void {}
-
-  protected abstract install(components: Container): Feature;
+  protected abstract install(components: Components): Component;
 }
